@@ -26,6 +26,7 @@ const getTags = async (url, page, repeat) => {
   });
   if (tags) tagsArray = tags.toLowerCase().split(",");
   if (tagsArray.length > 10) tagsArray = tagsArray.slice(0, 11);
+  sanitizeTagArray(tagsArray);
   console.log(tagsArray);
   console.log("------------------------------------------");
   if (tagsArray.every((i) => adsTags.includes(i))) return null; //HANDLE ADS
@@ -57,7 +58,7 @@ const sanitizeViews = (views) => {
 const sanitizeTagArray = (tags) => {
   console.log("Sanitizing tags...");
   if (!tags) return null; //ERR
-  for (let tag of tags) {
+  for (let tag in tags) {
     tag = tag.toLowerCase();
     tag = tag.trim();
   }

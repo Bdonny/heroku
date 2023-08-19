@@ -12,7 +12,7 @@ app.get("/browser/:name", async (req, res) => {
   if (!["chromium", "firefox"].includes(browserName)) {
     return res.status(500).send(`invalid browser name (${browserName})!`);
   }
-  const topic = req.query.url || "YouTube";
+  const topic = req.query.topic || "YouTube";
   console.log(req.query);
   if (topic === "YouTube") {
     console.log("No topic");
@@ -38,15 +38,9 @@ app.get("/browser/:name", async (req, res) => {
     });
 
     let results = await run(page, topic);
-    results = JSON.stringify(results);
-    const data = await page.screenshot({
-      type: "png",
-    });
     await browser.close();
-
-    res.contentType("image/png");
-    res.set("Content-Disposition", "inline;");
-    res.send(data);
+    results = JSON.stringify(results);
+    res.json(results);
   } catch (err) {
     res.status(500).send(`Something went wrong: ${err}`);
   }

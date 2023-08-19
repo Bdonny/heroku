@@ -14,6 +14,18 @@
       integrity="sha512-ADrqa2PY1TZtb/MoLZIZu/Z/LlPaWQeDMBV73EMwjGam43/JJ5fqW38Rq8LJOVGCDfrJeOMS3Q/wRUVzW5DkjQ=="
       crossorigin="anonymous"
     />
+    <style>
+      .image-container {
+        display: flex;
+        justify-content: space-between; /* Distribute space evenly between elements */
+        align-items: center; /* Vertically center the images */
+      }
+
+      .image-container img {
+        width: 30%; /* Adjust the width as needed */
+        max-width: 100%; /* Prevent images from exceeding their original size */
+      }
+    </style>
   </head>
 
   <body>
@@ -21,7 +33,14 @@
       <div class="hero-body">
         <div class="container">
           <h1 class="title">Dino-AI</h1>
-          <h2 class="subtitle">APP DESCRIPTION GOES HERE.</h2>
+          <h2 class="subtitle">
+            Unlock the full potential of your YouTube channel with the Dino-YT –
+            your ultimate companion for creating captivating and discoverable
+            video content. Designed for YouTubers of all experience levels, this
+            powerful tool simplifies the content creation process, making it
+            easier than ever to craft engaging videos that attract views,
+            subscribers, and success.
+          </h2>
         </div>
       </div>
     </section>
@@ -42,7 +61,7 @@
               class="input is-fullwidth"
               type="text"
               value="YouTube topic"
-              id="input-url"
+              id="yt-topic"
             />
           </div>
           <div class="control">
@@ -53,16 +72,18 @@
         </div>
       </div>
       <div class="notification">
-        <img
-          id="image-screenshot"
-          alt="Rendered screenshot"
-          src="/browser/chromium?url=elden+ring"
-        />
-        <img
-          id="image-screenshot1"
-          alt="Rendered screenshot1"
-          src="/browser/chromium?url=screenshot1"
-        />
+        <div>
+          <b>Suggested Tags</b>
+          <ol id="yt-data">
+            TAGS PLACEHOLDER
+          </ol>
+        </div>
+        <b>Suggested Thumbnails</b>
+        <div id="thumbnails" class="image-container">
+          <img id="screenshot-1" alt="Rendered screenshot" src="" />
+          <img id="screenshot-2" alt="Rendered screenshot" src="" />
+          <img id="screenshot-3" alt="Rendered screenshot" src="" />
+        </div>
       </div>
       <div class="notification">FEEDBACK</div>
     </div>
@@ -73,18 +94,34 @@
     </footer>
     <script>
       (() => {
-        const runBtn = document.querySelector("#btn-run");
-        runBtn.addEventListener("click", () => {
-          const browserSelect = document.querySelector("#select-browser");
-          const screenshotUrl = document.querySelector("#input-url");
-          const searchParams = new URLSearchParams();
-          console.log(searchParams);
-          searchParams.set("url", screenshotUrl.value);
+        document.addEventListener("DOMContentLoaded", () => {
+          const runBtn = document.querySelector("#btn-run");
+          runBtn.addEventListener("click", () => {
+            let query = document.querySelector("#yt-topic").value;
+            if (!query || query === "YouTube topic") return;
+            let src = "/browser/chromium?topic=" + query;
 
-          const screenshotElement = document.querySelector("#image-screenshot");
-          screenshotElement.src = `/browser/${
-            browserSelect.value
-          }?${searchParams.toString()}`;
+            const resultsContainer = document.querySelector("#yt-data");
+            const img1 = document.querySelector("#screenshot-1");
+            const img2 = document.querySelector("#screenshot-2");
+            const img3 = document.querySelector("#screenshot-3");
+            fetch(src)
+              .then((response) => response.json())
+              .then((data) => {
+                data = JSON.parse(data);
+                let str = data?.tags
+                  .slice(0, 10)
+                  .map((result) => `<li>${result?.element}</li>`)
+                  .join("");
+                resultsContainer.innerHTML = str;
+                img1.src = data.videos[0].thumbnail || data.videos[3].thumbnail;
+                img2.src = data.videos[1].thumbnail || data.videos[4].thumbnail;
+                img3.src = data.videos[2].thumbnail || data.videos[5].thumbnail;
+              })
+              .catch((error) => {
+                console.error("Error fetching data:", error);
+              });
+          });
         });
       })();
     </script>
