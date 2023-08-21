@@ -88,7 +88,7 @@ const sortAndCountStrings = (arr) => {
     }
   }
 
-  if (currentElement !== null) {
+  if (currentElement) {
     result.push({ element: currentElement, count: currentCount });
   }
 

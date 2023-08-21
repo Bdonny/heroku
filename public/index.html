@@ -15,24 +15,166 @@
       crossorigin="anonymous"
     />
     <style>
+      /* Base styles */
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f7f7f7;
+        color: #333;
+      }
+
+      header {
+        background-color: #af0000ad; /* Eye-catching blue background */
+        color: #fff; /* White text color */
+        padding: 20px 0; /* Vertical and horizontal padding */
+        text-align: center; /* Center-align text */
+      }
+
+      h1 {
+        font-size: 2.5rem; /* Large font size for the title */
+        font-weight: bold; /* Bold text */
+      }
+
+      /* First Section Styles */
+      .first-section {
+        background-color: #f7f7f7; /* Light gray background */
+        padding: 40px; /* Spacing around content */
+        text-align: center; /* Center-align text */
+      }
+
+      p {
+        font-size: 1.2rem; /* Medium font size for content */
+        line-height: 1.5; /* Comfortable line height */
+        color: #333; /* Dark text color */
+      }
+
+      :root {
+        --primary-color: #ff0000af;
+        --secondary-color: #333;
+        --background-color: #f7f7f7;
+      }
+
+      /* Form and button styles */
+      .field.has-addons {
+        margin-bottom: 20px;
+      }
+
+      .select select,
+      .input.is-fullwidth {
+        border: 1px solid var(--primary-color);
+        border-radius: 4px;
+        padding: 10px;
+        font-size: 1rem;
+      }
+
+      .button.is-info {
+        background-color: var(--primary-color);
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+      }
+
+      .button.is-info:hover {
+        background-color: #b30000;
+        transform: scale(1.05);
+      }
+
+      /* Loading overlay styles */
+      .loading-overlay {
+        /* position: fixed; */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+      }
+
+      .loading-spinner {
+        border: 6px solid rgba(0, 123, 255, 0.3);
+        border-top: 6px solid #007bff;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Notification styles */
+      .notification {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Image container styles */
       .image-container {
         display: flex;
-        justify-content: space-between; /* Distribute space evenly between elements */
-        align-items: center; /* Vertically center the images */
+        justify-content: space-between;
+        align-items: center;
       }
 
       .image-container img {
-        width: 30%; /* Adjust the width as needed */
-        max-width: 100%; /* Prevent images from exceeding their original size */
+        width: 30%;
+        border: 4px solid #007bff; /* 4px solid border with an eye-catching blue color */
+        border-radius: 8px; /* Rounded corners for a softer look */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+        max-width: 100%; /* Ensure images don't exceed their original size */
+        height: auto; /* Maintain aspect ratio */
+        display: block; /* Remove any extra space below images */
+        margin: 0 auto; /* Center-align images horizontally */
+      }
+
+      ul {
+        list-style: none; /* Remove default list bullets */
+        padding: 0; /* Remove default padding */
+      }
+
+      li {
+        display: flex; /* Use flex layout for list items */
+        justify-content: space-between; /* Distribute space between text and bar */
+        align-items: center; /* Vertically align items */
+        border-bottom: 1px solid #ccc; /* Add a 1px solid border at the bottom of each list item */
+        padding: 10px; /* Add some padding for spacing */
+      }
+
+      /* Style for the percentage bars */
+      .percentage-bar {
+        width: 100px; /* Set the width of the bars */
+        height: 10px; /* Set the height of the bars */
+        background: linear-gradient(
+          to right,
+          green,
+          rgb(167, 255, 189)
+        ); /* Gradient from green to yellow to red */
       }
     </style>
   </head>
 
   <body>
+    <header>
+      <h1>Dino-YT</h1>
+    </header>
     <section class="hero">
       <div class="hero-body">
         <div class="container">
-          <h1 class="title">Dino-AI</h1>
           <h2 class="subtitle">
             Unlock the full potential of your YouTube channel with the Dino-YT –
             your ultimate companion for creating captivating and discoverable
@@ -60,7 +202,7 @@
             <input
               class="input is-fullwidth"
               type="text"
-              value="YouTube topic"
+              placeholder="YouTube topic"
               id="yt-topic"
             />
           </div>
@@ -71,11 +213,16 @@
           </div>
         </div>
       </div>
+      <!-- Loading spinner container -->
+      <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+      </div>
+
       <div class="notification">
         <div>
           <b>Suggested Tags</b>
           <ol id="yt-data">
-            TAGS PLACEHOLDER
+            TAGS: Waiting for search...
           </ol>
         </div>
       </div>
@@ -83,7 +230,7 @@
         <div>
           <b>Sample Titles</b>
           <ul id="yt-titles">
-            titles PLACEHOLDER
+            TITLES: Waiting for search...
           </ul>
         </div>
       </div>
@@ -96,7 +243,54 @@
         </div>
       </div>
       <div class="notification">
-        <h1>Feedback Form</h1>
+        Key Features:
+
+        <p>
+          <b>Tag Generation:</b> Say goodbye to the guesswork! Our app utilizes
+          advanced algorithms to generate a comprehensive list of relevant tags
+          tailored to your video topic. Increase your video's discoverability
+          and SEO ranking effortlessly.
+        </p>
+        <p>
+          <b>Title Suggestions:</b> Crafting the perfect video title is an art. Dino-YT
+          offers smart title suggestions based on popular keywords and trending
+          topics. Capture your audience's attention from the very beginning.
+        </p>
+        <p>
+          <b>Thumbnail Creator:</b> They say a picture is worth a thousand words. Our
+          built-in thumbnail creator empowers you to design eye-catching
+          thumbnails that stand out in the YouTube search results and attract
+          clicks.
+        </p>
+        <p>
+          <b>Keyword Research:</b> Dive deep into the world of keywords. Discover the
+          most searched-for terms in your niche and strategically incorporate
+          them into your content to maximize reach.
+        </p>
+        <p>
+          <b>Competitor Analysis:</b> Stay one step ahead of the competition. Analyze
+          your competitors' video tags, titles, and thumbnails to gain insights
+          and outperform them.
+        </p>
+        <p>
+          <b>Content Planner:</b> Plan your content creation schedule with ease.
+          Organize your video ideas, tags, and titles in one place, ensuring a
+          consistent and well-optimized upload strategy.
+        </p>
+        <p>
+          <b>Analytics Integration:</b> Track the performance of your videos directly
+          within the app. Monitor views, engagement, and subscriber growth to
+          refine your content strategy continuously.
+        </p>
+        <p>
+          <b>User-Friendly Interface:</b> Our intuitive and user-friendly interface
+          ensures that YouTubers of all skill levels can harness the full
+          potential of the Dino-YT.
+        </p>
+      </div>
+      </div>
+      <div class="notification">
+        <h1>Feedback</h1>
         <form id="feedback-form">
           <label for="feedback">Please provide your feedback:</label>
           <textarea
@@ -113,30 +307,43 @@
     </div>
     <footer class="footer">
       <div class="content has-text-centered">
-        <p>FOOTER & DONATIONS</p>
-      </div>
+        <p>FOOTER</p>
     </footer>
     <script>
       (() => {
         document.addEventListener("DOMContentLoaded", () => {
           const runBtn = document.querySelector("#btn-run");
+          const loadingOverlay = document.querySelector("#loading-overlay");
+
           runBtn.addEventListener("click", () => {
             let query = document.querySelector("#yt-topic").value;
-            if (!query || query === "YouTube topic") return;
-            let src = "/browser/chromium?topic=" + query;
+            if (!query) return;
+            let src = "/browser/chromium?topic=" + query.trim();
 
             const resultsContainer = document.querySelector("#yt-data");
             const titlesContainer = document.querySelector("#yt-titles");
             const img1 = document.querySelector("#screenshot-1");
             const img2 = document.querySelector("#screenshot-2");
             const img3 = document.querySelector("#screenshot-3");
+
+            // Show the loading overlay
+            loadingOverlay.style.opacity = "1";
+
             fetch(src)
               .then((response) => response.json())
               .then((data) => {
                 data = JSON.parse(data);
+                const max = data.tags[0].count;
                 let str = data?.tags
                   .slice(0, 10)
-                  .map((result) => `<li>${result?.element}</li>`)
+                  .map(
+                    (result) =>
+                      `<li>${
+                        result?.element
+                      }<div class="percentage-bar" style="width: ${
+                        (result?.count / max) * 100
+                      }%;"></div></li>`
+                  )
                   .join("");
                 resultsContainer.innerHTML = str;
                 let titles = data?.titles
@@ -146,9 +353,14 @@
                 img1.src = data.thumbnails[1];
                 img2.src = data.thumbnails[2];
                 img3.src = data.thumbnails[3];
+
+                // Hide the loading overlay once results are ready
+                loadingOverlay.style.opacity = "0";
               })
               .catch((error) => {
                 console.error("Error fetching data:", error);
+                // Hide the loading overlay on error
+                loadingOverlay.style.opacity = "0";
               });
           });
         });
