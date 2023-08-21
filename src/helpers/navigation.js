@@ -26,9 +26,6 @@ const getTags = async (url, page, repeat) => {
   });
   if (tags) tagsArray = tags.toLowerCase().split(",");
   if (tagsArray.length > 10) tagsArray = tagsArray.slice(0, 11);
-  sanitizeTagArray(tagsArray);
-  console.log(tagsArray);
-  console.log("------------------------------------------");
   if (tagsArray.every((i) => adsTags.includes(i))) return null; //HANDLE ADS
   while (repeat > 0) {
     tagsArray = [...tagsArray, ...tagsArray];
@@ -57,11 +54,16 @@ const sanitizeViews = (views) => {
  */
 const sanitizeTagArray = (tags) => {
   console.log("Sanitizing tags...");
+  var regex = /[^a-zA-Z0-9\s]/g;
   if (!tags) return null; //ERR
-  for (let tag in tags) {
+  let res = new Array();
+  for (let tag of tags) {
     tag = tag.toLowerCase();
     tag = tag.trim();
+    tag = tag.replace(regex, "");
+    res.push(tag);
   }
+  return res;
 };
 
 /*
@@ -75,7 +77,7 @@ const sortAndCountStrings = (arr) => {
   let currentCount = 0;
 
   for (const element of sortedArr) {
-    if (element !== currentElement) {
+    if (element.trim() !== currentElement) {
       if (currentElement !== null) {
         result.push({ element: currentElement, count: currentCount });
       }

@@ -60,7 +60,6 @@ const run = async (page, topic) => {
     results.forEach((video) => {
       video.views = sanitizeViews(video?.views);
     });
-    console.log(results);
 
     for (let video of results) {
       let videoTags = new Array();
@@ -72,9 +71,22 @@ const run = async (page, topic) => {
       videoTags = await getTags(video.href, page, repeat);
       if (videoTags) tags = [...tags, ...videoTags];
     }
-    sanitizeTagArray(tags);
+    results = results.sort((a, b) => b.score - a.score);
+    tags = sanitizeTagArray(tags);
     tags = sortAndCountStrings(tags);
     let data = { videos: results, tags: tags };
+
+    //get thumbnails
+    let images = new Array();
+    let titles = new Array();
+    for (let video of results) {
+      if (video.thumbnail) images.push(video.thumbnail);
+      if (titles.length < 5) titles.push(video.videoName);
+      if (images.length > 3 && titles.length >= 5) break;
+    }
+    data.thumbnails = images;
+    data.titles = titles;
+
     console.log(data);
     console.log("Entries found: " + results.length);
     return data;

@@ -78,14 +78,38 @@
             TAGS PLACEHOLDER
           </ol>
         </div>
-        <b>Suggested Thumbnails</b>
+      </div>
+      <div class="notification">
+        <div>
+          <b>Sample Titles</b>
+          <ul id="yt-titles">
+            titles PLACEHOLDER
+          </ul>
+        </div>
+      </div>
+      <div class="notification">
+        <b>Sample Thumbnails</b>
         <div id="thumbnails" class="image-container">
           <img id="screenshot-1" alt="Rendered screenshot" src="" />
           <img id="screenshot-2" alt="Rendered screenshot" src="" />
           <img id="screenshot-3" alt="Rendered screenshot" src="" />
         </div>
       </div>
-      <div class="notification">FEEDBACK</div>
+      <div class="notification">
+        <h1>Feedback Form</h1>
+        <form id="feedback-form">
+          <label for="feedback">Please provide your feedback:</label>
+          <textarea
+            id="feedback"
+            name="feedback"
+            rows="4"
+            cols="50"
+            required
+          ></textarea>
+          <br />
+          <input type="submit" value="Submit Feedback" />
+        </form>
+      </div>
     </div>
     <footer class="footer">
       <div class="content has-text-centered">
@@ -102,6 +126,7 @@
             let src = "/browser/chromium?topic=" + query;
 
             const resultsContainer = document.querySelector("#yt-data");
+            const titlesContainer = document.querySelector("#yt-titles");
             const img1 = document.querySelector("#screenshot-1");
             const img2 = document.querySelector("#screenshot-2");
             const img3 = document.querySelector("#screenshot-3");
@@ -114,9 +139,13 @@
                   .map((result) => `<li>${result?.element}</li>`)
                   .join("");
                 resultsContainer.innerHTML = str;
-                img1.src = data.videos[0].thumbnail || data.videos[3].thumbnail;
-                img2.src = data.videos[1].thumbnail || data.videos[4].thumbnail;
-                img3.src = data.videos[2].thumbnail || data.videos[5].thumbnail;
+                let titles = data?.titles
+                  .map((result) => `<li>${result}</li>`)
+                  .join("");
+                titlesContainer.innerHTML = titles;
+                img1.src = data.thumbnails[1];
+                img2.src = data.thumbnails[2];
+                img3.src = data.thumbnails[3];
               })
               .catch((error) => {
                 console.error("Error fetching data:", error);
