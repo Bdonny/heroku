@@ -237,40 +237,41 @@
       <div class="notification">
         <b>Sample Thumbnails</b>
         <div id="thumbnails" class="image-container">
-          <img id="screenshot-1" alt="Rendered screenshot" src="" />
-          <img id="screenshot-2" alt="Rendered screenshot" src="" />
-          <img id="screenshot-3" alt="Rendered screenshot" src="" />
+          <img id="screenshot-1" alt="No image..." src="" />
+          <img id="screenshot-2" alt="No image..." src="" />
+          <img id="screenshot-3" alt="No image..." src="" />
         </div>
       </div>
       <div class="notification">
         Key Features:
 
-        <p>
+        <p></p>
           <b>Tag Generation:</b> Say goodbye to the guesswork! Our app utilizes
           advanced algorithms to generate a comprehensive list of relevant tags
           tailored to your video topic. Increase your video's discoverability
           and SEO ranking effortlessly.
         </p>
         <p>
-          <b>Title Suggestions:</b> Crafting the perfect video title is an art. Dino-YT
-          offers smart title suggestions based on popular keywords and trending
-          topics. Capture your audience's attention from the very beginning.
+          <b>Title Suggestions:</b> Crafting the perfect video title is an art.
+          Dino-YT offers smart title suggestions based on popular keywords and
+          trending topics. Capture your audience's attention from the very
+          beginning.
         </p>
         <p>
-          <b>Thumbnail Creator:</b> They say a picture is worth a thousand words. Our
-          built-in thumbnail creator empowers you to design eye-catching
-          thumbnails that stand out in the YouTube search results and attract
-          clicks.
+          <b>Thumbnail Creator:</b> They say a picture is worth a thousand
+          words. Our built-in thumbnail creator empowers you to design
+          eye-catching thumbnails that stand out in the YouTube search results
+          and attract clicks.
         </p>
         <p>
-          <b>Keyword Research:</b> Dive deep into the world of keywords. Discover the
-          most searched-for terms in your niche and strategically incorporate
-          them into your content to maximize reach.
+          <b>Keyword Research:</b> Dive deep into the world of keywords.
+          Discover the most searched-for terms in your niche and strategically
+          incorporate them into your content to maximize reach.
         </p>
         <p>
-          <b>Competitor Analysis:</b> Stay one step ahead of the competition. Analyze
-          your competitors' video tags, titles, and thumbnails to gain insights
-          and outperform them.
+          <b>Competitor Analysis:</b> Stay one step ahead of the competition.
+          Analyze your competitors' video tags, titles, and thumbnails to gain
+          insights and outperform them.
         </p>
         <p>
           <b>Content Planner:</b> Plan your content creation schedule with ease.
@@ -278,16 +279,15 @@
           consistent and well-optimized upload strategy.
         </p>
         <p>
-          <b>Analytics Integration:</b> Track the performance of your videos directly
-          within the app. Monitor views, engagement, and subscriber growth to
-          refine your content strategy continuously.
+          <b>Analytics Integration:</b> Track the performance of your videos
+          directly within the app. Monitor views, engagement, and subscriber
+          growth to refine your content strategy continuously.
         </p>
         <p>
-          <b>User-Friendly Interface:</b> Our intuitive and user-friendly interface
-          ensures that YouTubers of all skill levels can harness the full
-          potential of the Dino-YT.
+          <b>User-Friendly Interface:</b> Our intuitive and user-friendly
+          interface ensures that YouTubers of all skill levels can harness the
+          full potential of the Dino-YT.
         </p>
-      </div>
       </div>
       <div class="notification">
         <h1>Feedback</h1>
@@ -308,6 +308,7 @@
     <footer class="footer">
       <div class="content has-text-centered">
         <p>FOOTER</p>
+      </div>
     </footer>
     <script>
       (() => {
@@ -319,6 +320,7 @@
             let query = document.querySelector("#yt-topic").value;
             if (!query) return;
             let src = "/browser/chromium?topic=" + query.trim();
+            let str = "<p>No Tags Found...</p>";
 
             const resultsContainer = document.querySelector("#yt-data");
             const titlesContainer = document.querySelector("#yt-titles");
@@ -333,26 +335,28 @@
               .then((response) => response.json())
               .then((data) => {
                 data = JSON.parse(data);
-                const max = data.tags[0].count;
-                let str = data?.tags
-                  .slice(0, 10)
-                  .map(
-                    (result) =>
-                      `<li>${
-                        result?.element
-                      }<div class="percentage-bar" style="width: ${
-                        (result?.count / max) * 100
-                      }%;"></div></li>`
-                  )
-                  .join("");
+                const max = data?.tags[0]?.count;
+                if (max) {
+                  str = data?.tags
+                    .slice(0, 10)
+                    .map(
+                      (result) =>
+                        `<li>${
+                          result?.element
+                        }<div class="percentage-bar" style="width: ${
+                          (result?.count / max) * 100
+                        }%;"></div></li>`
+                    )
+                    .join("");
+                }
                 resultsContainer.innerHTML = str;
                 let titles = data?.titles
                   .map((result) => `<li>${result}</li>`)
                   .join("");
                 titlesContainer.innerHTML = titles;
-                img1.src = data.thumbnails[1];
-                img2.src = data.thumbnails[2];
-                img3.src = data.thumbnails[3];
+                img1.src = data?.thumbnails[1];
+                img2.src = data?.thumbnails[2];
+                img3.src = data?.thumbnails[3];
 
                 // Hide the loading overlay once results are ready
                 loadingOverlay.style.opacity = "0";
