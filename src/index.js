@@ -12,9 +12,10 @@ app.get("/browser/:name", async (req, res) => {
   if (!["chromium", "firefox"].includes(browserName)) {
     return res.status(500).send(`invalid browser name (${browserName})!`);
   }
-  const topic = req.query.topic || "YouTube";
+  const topic = req.query.topic || null;
+  const recent = req.query.recent || false;
   console.log(req.query);
-  if (topic === "YouTube") {
+  if (!topic) {
     console.log("No topic");
     return;
   }
@@ -22,7 +23,7 @@ app.get("/browser/:name", async (req, res) => {
   const width = req.query.width ? parseInt(req.query.width, 10) : 1920;
   const height = req.query.height ? parseInt(req.query.height, 10) : 1080;
   console.log(
-    `Incoming request for browser '${browserName}' and topic '${topic}'`
+    `Incoming request for browser '${browserName}' and topic '${topic}' recent '${recent}'`
   );
 
   try {
@@ -37,7 +38,7 @@ app.get("/browser/:name", async (req, res) => {
       },
     });
 
-    let results = await run(page, topic);
+    let results = await run(page, topic, recent);
     await browser.close();
     results = JSON.stringify(results);
     res.json(results);

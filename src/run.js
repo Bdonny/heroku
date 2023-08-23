@@ -3,21 +3,29 @@ const {
   sanitizeViews,
   getTags,
   sortAndCountStrings,
+  compareStrings,
 } = require("./helpers/navigation");
 
 const subscribers = "#owner-sub-count";
-const run = async (page, topic) => {
+let search = null;
+const recentFilter = "&sp=EgIIBA%253D%253D";
+
+const run = async (page, topic, recent) => {
+  let query2 = "";
   try {
     console.log("Initializing the bot...");
     let tags = new Array();
     let query = topic || "elden ring";
     console.log("Searching for " + query);
+    search = query;
     query = query.replace(" ", "+");
+    if (recent) query2 = recentFilter;
     await page.goto(
-      "https://www.youtube.com/results?search_query=" + query.trim()
+      "https://www.youtube.com/results?search_query=" + query.trim() + query2
     );
     await page.waitForSelector("#contents > ytd-video-renderer");
     await page.keyboard.down("End");
+    //await page.waitForTimeout(500);
 
     let results = new Array();
     results = await page.$$eval(
@@ -86,6 +94,8 @@ const run = async (page, topic) => {
     }
     data.thumbnails = images;
     data.titles = titles;
+    let titlesHtml = compareStrings(titles[0], titles[1], titles[2], search);
+    data.html = titlesHtml;
 
     console.log(data);
     console.log("Entries found: " + results.length);

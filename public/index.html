@@ -165,6 +165,13 @@
           rgb(167, 255, 189)
         ); /* Gradient from green to yellow to red */
       }
+
+      .similarity {
+        background-color: #aaffaa;
+      }
+      .difference {
+        background-color: #ffaaaa;
+      }
     </style>
   </head>
 
@@ -187,14 +194,14 @@
       </div>
     </section>
     <div class="container pb-5">
-      <div class="notification">HOW THE APP WORKS.</div>
+      <div class="notification">Try Searching Your Title or a Topic</div>
       <div class="notification">
         <div class="field has-addons">
           <div class="control">
             <div class="select">
-              <select id="select-browser">
-                <option value="chromium">Chrome</option>
-                <option value="firefox">Firefox</option>
+              <select id="range">
+                <option value="relevance">All Time</option>
+                <option value="recent">Most Recent</option>
               </select>
             </div>
           </div>
@@ -202,7 +209,7 @@
             <input
               class="input is-fullwidth"
               type="text"
-              placeholder="YouTube topic"
+              placeholder="Try searching your video title"
               id="yt-topic"
             />
           </div>
@@ -228,14 +235,16 @@
       </div>
       <div class="notification">
         <div>
-          <b>Sample Titles</b>
+          <b>Sample Titles from YouTube</b>
           <ul id="yt-titles">
             TITLES: Waiting for search...
           </ul>
         </div>
+        <h3>Title Analysis</h3>
+        <div id="title-analysis">Analysis...</div>
       </div>
       <div class="notification">
-        <b>Sample Thumbnails</b>
+        <b>Sample Thumbnails from YouTube</b>
         <div id="thumbnails" class="image-container">
           <img id="screenshot-1" alt="No image..." src="" />
           <img id="screenshot-2" alt="No image..." src="" />
@@ -315,11 +324,27 @@
         document.addEventListener("DOMContentLoaded", () => {
           const runBtn = document.querySelector("#btn-run");
           const loadingOverlay = document.querySelector("#loading-overlay");
+          const titleAnalysis = document.querySelector("#title-analysis");
+          const searchInput = document.querySelector("#yt-topic");
 
           runBtn.addEventListener("click", () => {
+            search();
+          });
+
+          searchInput.addEventListener("keydown", function (event) {
+            console.log("enter");
+            if (event.keyCode === 13) {
+              search();
+            }
+          });
+
+          function search() {
+            let query2 = "";
             let query = document.querySelector("#yt-topic").value;
             if (!query) return;
-            let src = "/browser/chromium?topic=" + query.trim();
+            let range = document.querySelector("#range").value;
+            if (range === "recent") query2 = "&recent=true";
+            let src = "/browser/chromium?topic=" + query.trim() + query2;
             let str = "<p>No Tags Found...</p>";
 
             const resultsContainer = document.querySelector("#yt-data");
@@ -350,6 +375,7 @@
                     .join("");
                 }
                 resultsContainer.innerHTML = str;
+                titleAnalysis.innerHTML = data.html;
                 let titles = data?.titles
                   .map((result) => `<li>${result}</li>`)
                   .join("");
@@ -366,7 +392,7 @@
                 // Hide the loading overlay on error
                 loadingOverlay.style.opacity = "0";
               });
-          });
+          }
         });
       })();
     </script>
