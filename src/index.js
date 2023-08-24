@@ -7,6 +7,32 @@ const app = express();
 app.use(express.static("./public"));
 const port = process.env.PORT || 3000;
 
+// Define the list of allowed domains
+const allowedDomains = ["https://animelister.com"];
+
+// Enable CORS only for the specified domains
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+
+  if (allowedDomains.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    );
+    res.header("Access-Control-Allow-Credentials", "true");
+  }
+
+  if (req.method === "OPTIONS") {
+    // This is a pre-flight request; respond successfully
+    res.sendStatus(200);
+  } else {
+    // Continue processing the request
+    next();
+  }
+});
+
 app.get("/browser/:name", async (req, res) => {
   const browserName = req.params["name"] || "chromium";
   if (!["chromium", "firefox"].includes(browserName)) {
