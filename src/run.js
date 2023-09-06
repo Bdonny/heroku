@@ -82,7 +82,7 @@ const run = async (page, topic, recent) => {
     results = results.sort((a, b) => b.score - a.score);
     tags = sanitizeTagArray(tags);
     tags = sortAndCountStrings(tags);
-    let data = { videos: results, tags: tags };
+    let data = { search, videos: results, tags: tags };
 
     //get thumbnails
     let images = new Array();

@@ -8,7 +8,7 @@ app.use(express.static("./public"));
 const port = process.env.PORT || 3000;
 
 // Define the list of allowed domains
-const allowedDomains = ["https://animelister.com"];
+const allowedDomains = ["https://animelister.com", "https://dyno-ai.com"];
 
 // Enable CORS only for the specified domains
 app.use((req, res, next) => {
@@ -40,6 +40,7 @@ app.get("/browser/:name", async (req, res) => {
   }
   const topic = req.query.topic || null;
   const recent = req.query.recent || false;
+  const user = req.query.user || null;
   console.log(req.query);
   if (!topic) {
     console.log("No topic");
