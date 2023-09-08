@@ -8,7 +8,7 @@ app.use(express.static("./public"));
 const port = process.env.PORT || 3000;
 
 // Define the list of allowed domains
-const allowedDomains = ["https://animelister.com", "https://dyno-ai.com"];
+const allowedDomains = ["https://dyno-ai.com"];
 
 // Enable CORS only for the specified domains
 app.use((req, res, next) => {
