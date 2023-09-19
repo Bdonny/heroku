@@ -88,9 +88,12 @@ const run = async (page, topic, recent) => {
     let images = new Array();
     let titles = new Array();
     for (let video of results) {
-      if (video.thumbnail) images.push(video.thumbnail);
       if (titles.length < 5) titles.push(video.videoName);
       if (images.length > 3 && titles.length >= 5) break;
+    }
+    for (let video of results) {
+      if (video.thumbnail) images.push(video.thumbnail);
+      if (images.length >= 3) break;
     }
     data.thumbnails = images;
     data.titles = titles;
