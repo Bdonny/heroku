@@ -1,5 +1,6 @@
 const sendDynoMetrics = (metrics) => {
   const dyno = "https://dyno-ai.com/wp-json";
+  console.log(`Sending metrics to DYNO... ${metrics}`);
   fetch(`${dyno}/metrics/v1/save`, {
     method: "POST",
     headers: {
