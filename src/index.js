@@ -2,6 +2,7 @@ const express = require("express");
 const { chromium } = require("playwright-chromium");
 const { firefox } = require("playwright-firefox");
 const { run } = require("./run");
+const { sendDynoMetrics } = require("./helpers/api");
 
 const app = express();
 app.use(express.static("./public"));
@@ -52,7 +53,7 @@ app.get("/browser/:name", async (req, res) => {
   console.log(
     `Incoming request for browser '${browserName}' and topic '${topic}' recent '${recent}'`
   );
-
+  let metrics = null;
   try {
     /** @type {import('playwright-chromium').Browser} */
     const browser = await { chromium, firefox }[browserName].launch({
@@ -69,8 +70,17 @@ app.get("/browser/:name", async (req, res) => {
     await browser.close();
     results = JSON.stringify(results);
     res.json(results);
+    metrics = {
+      user,
+      search: topic,
+      results: results?.tags,
+      success: true,
+    };
   } catch (err) {
     res.status(500).send(`Something went wrong: ${err}`);
+    metrics = { user, search: topic, results: err, success: false };
+  } finally {
+    sendDynoMetrics(metrics);
   }
 });
 
