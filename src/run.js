@@ -93,7 +93,7 @@ const run = async (page, topic, recent) => {
     }
     for (let video of results) {
       if (video.thumbnail) images.push(video.thumbnail);
-      if (images.length >= 3) break;
+      if (images.length >= 6) break;
     }
     data.thumbnails = images;
     data.titles = titles;
