@@ -16,6 +16,8 @@ const run = async (page, topic, recent) => {
     console.log("Initializing the bot...");
     let tags = new Array();
     let query = topic || "elden ring";
+    let average = null;
+    let sum = 0;
     console.log("Searching for " + query);
     search = query;
     query = query.replace(" ", "+");
@@ -67,6 +69,7 @@ const run = async (page, topic, recent) => {
     //eval end
     results.forEach((video) => {
       video.views = sanitizeViews(video?.views);
+      sum += video.views;
     });
 
     for (let video of results) {
@@ -99,6 +102,8 @@ const run = async (page, topic, recent) => {
     data.titles = titles;
     let titlesHtml = compareStrings(titles[0], titles[1], titles[2], search);
     data.html = titlesHtml;
+    average = sum / results.length;
+    data.avarage = average;
 
     console.log(data);
     console.log("Entries found: " + results.length);

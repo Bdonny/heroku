@@ -222,6 +222,11 @@
       <div class="loading-overlay" id="loading-overlay">
         <div class="loading-spinner"></div>
       </div>
+      <div class="notification">
+        <div>
+          <b>Average Views</b><span id="avg-views">Waiting for search...</span>
+        </div>
+      </div>
 
       <div class="notification">
         <div>
@@ -350,6 +355,7 @@
             const img1 = document.querySelector("#screenshot-1");
             const img2 = document.querySelector("#screenshot-2");
             const img3 = document.querySelector("#screenshot-3");
+            let views = document.querySelector("#avg-views");
 
             // Show the loading overlay
             loadingOverlay.style.opacity = "1";
@@ -374,6 +380,7 @@
                 }
                 resultsContainer.innerHTML = str;
                 titleAnalysis.innerHTML = data.html;
+                views.innerHTML = data.average;
                 let titles = data?.titles
                   .map((result) => `<li>${result}</li>`)
                   .join("");
