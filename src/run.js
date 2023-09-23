@@ -103,7 +103,7 @@ const run = async (page, topic, recent) => {
     let titlesHtml = compareStrings(titles[0], titles[1], titles[2], search);
     data.html = titlesHtml;
     average = sum / results.length;
-    data.avarage = average;
+    data.average = average;
 
     console.log(data);
     console.log("Entries found: " + results.length);
